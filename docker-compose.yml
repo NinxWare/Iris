@@ -1,0 +1,59 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aimodelhub-postgres
+    environment:
+      POSTGRES_DB: aimodelrepo
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d aimodelrepo']
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  backend:
+    build: ./backend
+    container_name: aimodelhub-backend
+    environment:
+      PORT: 5000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/aimodelrepo?schema=public
+      JWT_ACCESS_SECRET: super-secret-access-change
+      CORS_ORIGIN: http://localhost:3000
+    ports:
+      - '5000:5000'
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/prisma:/app/prisma
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:5000/api/health']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build: ./frontend
+    container_name: aimodelhub-frontend
+    environment:
+      VITE_API_URL: http://localhost:5000/api
+    ports:
+      - '3000:3000'
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--spider', '-q', 'http://localhost:3000']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  postgres_data:
