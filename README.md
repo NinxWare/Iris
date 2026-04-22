@@ -9,7 +9,7 @@
 
 Repositório público de modelos de IA com backend REST (Express + Prisma + PostgreSQL) e frontend SPA (React + Vite + Tailwind).
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/NinxWare/Iris/ci.yml)
+![CI](https://github.com/NinxWare/Iris/actions/workflows/ci.yml/badge.svg)
 
 ## Funcionalidades
 - Cadastro/login com JWT (access token + refresh token)
