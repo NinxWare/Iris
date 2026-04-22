@@ -1,0 +1,54 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  name          String
+  email         String         @unique
+  passwordHash  String
+  avatar        String?
+  models        Model[]
+  refreshTokens RefreshToken[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Model {
+  id          String      @id @default(uuid())
+  name        String      @unique
+  description String
+  tags        String[]
+  downloads   Int         @default(0)
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  files       ModelFile[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model ModelFile {
+  id          String   @id @default(uuid())
+  filename    String
+  original    String
+  mimeType    String
+  size        Int
+  relativeDir String
+  modelId     String
+  model       Model    @relation(fields: [modelId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+}
