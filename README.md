@@ -1,3 +1,10 @@
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0))
+![Node](https://img.shields.io/badge/Node-20-green)
+![React](https://img.shields.io/badge/React-18-blue)
+![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)
+
+![Ninx-Net 🍿 ](https://ninxs.netlify.app/pths/Ninx-base.Logo.png)
+
 # AI Model Hub
 
 Repositório público de modelos de IA com backend REST (Express + Prisma + PostgreSQL) e frontend SPA (React + Vite + Tailwind).
